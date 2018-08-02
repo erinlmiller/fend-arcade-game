@@ -32,18 +32,21 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 class Hero {
+  //Character constructor, start position, and jump size
   constructor() {
     this.step = 101;
     this.jump = 83;
     this.startX = this.step * 2;
-    this.startY = (this.jump * 5) - 20;
+    this.startY = (this.jump * 4) + 55;
     this.x = this.startX;
     this.y = this.startY;
-    this.sprite = 'images/char-boy.png';
+    this.sprite = 'images/char-horn-girl.png';
+    this.victory = false;
   }
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+  //Handle user input
   handleInput(input) {
     switch(input) {
       case 'left':
@@ -68,6 +71,23 @@ class Hero {
         break;
     }
   }
+  //Detect enemy collisions, reset character back to start when collision detected
+  update() {
+    for(let enemy of allEnemies) {
+      if (this.y === enemy.y && (enemy.x + enemy.step/2 > this.x && enemy.x < this.x + this.step/2)) {
+      this.reset();
+      }
+    }
+    //Detect winning y coordinate
+    if(this.y === 55) {
+      this.victory = true;
+    }
+  }
+  //Reset back to the beginning
+  reset() {
+    this.y = this.startY;
+    this.x = this.startX;
+  }
 }
 
 // Now instantiate your objects.
@@ -75,12 +95,12 @@ class Hero {
 // Place the player object in a variable called player
 
 const player = new Hero();
-const bug1 = new Enemy(-101, 0, 200);
-const bug2 = new Enemy(-101, 83, 300);
-const bug3 = new Enemy((-101*2.5), (83*2), 350);
+const bug1 = new Enemy(-101, 0, 225);
+const bug2 = new Enemy(-101, 83, 275);
+const bug3 = new Enemy((-101*2.5), (83*2), 375);
+const bug4 = new Enemy((-101*1.5), (83*2), 100);
 const allEnemies = [];
-allEnemies.push(bug1,bug2,bug3);
-console.log(allEnemies);
+allEnemies.push(bug1,bug2,bug3,bug4);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
